@@ -16,9 +16,9 @@
   
     let body = JSON.stringify(query1);
   
-    const url = "https://cognito-idp.eu-west-2.amazonaws.com/eu-west-2_XJ0fMS4Ey";
+    const cognitoUrl = "https://cognito-idp.eu-west-2.amazonaws.com/eu-west-2_XJ0fMS4Ey";
   
-    const request = fetch(url, {
+    const request = fetch(cognitoUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-amz-json-1.1",
@@ -50,11 +50,11 @@
       `;
   
     let projectBody = JSON.stringify({query: projectQuery});
-    const projectUrl = "https://staging.api.flowengineering.com/v1/graphql"
+    const queryUrl = "https://staging.api.flowengineering.com/v1/graphql"
   
     var bearer = 'Bearer ' + idToken;
   
-    const projectQueryResult = fetch(projectUrl, {
+    const projectQueryResult = fetch(queryUrl, {
       method: "POST",
       headers: {
         Authorization: bearer,
@@ -63,6 +63,41 @@
       body: projectBody
     });
   
-    projectQueryResult.then((res) => res.json()).then((data) => console.log(data));
+    let projectId = await projectQueryResult.then((res) => res.json()).then((data) => data["data"]["project"][0]["project_id"]);
+
+    console.log(projectId)
+
+    const categoryQuery = `
+  query DataCategories($projectId: uuid!) {
+    data_category(where: { project_id: { _eq: $projectId } }) {
+      category_id
+      name
+      human_id_prefix
+      project {
+        project_id
+        name
+      }
+      archived
+    }
   }
+  `;
+
+  let categoryBody = JSON.stringify({query: categoryQuery,
+                                     variables: {projectId}})
+
+  const categoryQueryResult = fetch(queryUrl, {
+    method: "POST",
+    headers: {
+      Authorization: bearer,
+      "Content-Type": "application/json"
+    },
+    body: categoryBody
+  });
+
+  let categoryId = await categoryQueryResult.then((res) => res.json()).then((data) => data["data"]["data_category"][0]["category_id"]);
+
+  console.log(categoryId)
+
+  
+}
   
