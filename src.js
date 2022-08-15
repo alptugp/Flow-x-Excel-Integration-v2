@@ -1,10 +1,10 @@
 /**
  * Pulls the value of the corresponding parameter from Flow.
  * @customfunction
- * @param {number} dummy
+ * @param {string} parameterName
  * @returns The value of the given parameter.
  */
- async function flow(dummy) {
+ async function flow(parameterName) {
     const query1 = {
       ClientId: "3asjpt4hmudvll6us1v45i1vs3",
       AuthFlow: "USER_PASSWORD_AUTH",
@@ -131,8 +131,24 @@
     body: dataBody
   });
 
-  let dataId = await dataQueryResult.then((res) => res.json()).then((data) => data["data"]["data"]);
+  let datas = await dataQueryResult.then((res) => res.json()).then((data) => data["data"]["data"]);
 
-  console.log(dataId)
+  // console.log(datas)
+
+  function getMatchingDataVal(dataQueryRes, parameterName) {
+    let res;
+    for (let data of dataQueryRes) {
+      if (data["name"] == parameterName) {
+        res = data["value"]
+      }
+    }
+    return res
+  }
+
+  console.log(getMatchingDataVal(datas, parameterName))
+
+  let parameterVal = getMatchingDataVal(datas, parameterName)
+
+  return parameterVal
 }
   
