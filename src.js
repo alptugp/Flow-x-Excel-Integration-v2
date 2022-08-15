@@ -136,16 +136,20 @@
   // console.log(datas)
 
   function getMatchingDataVal(dataQueryRes, parameterName) {
-    let res;
+    let parameterValue;
     for (let data of dataQueryRes) {
       if (data["name"] == parameterName) {
-        res = data["value"]
+        parameterValue = data["value"]
       }
     }
-    return res
+    if (parameterValue == null) {
+      console.log("Please enter a parameter name which exists in Flow.")
+      return
+    }
+    return parameterValue
   }
 
-  console.log(getMatchingDataVal(datas, parameterName))
+  // console.log(getMatchingDataVal(datas, parameterName))
 
   let parameterVal = getMatchingDataVal(datas, parameterName)
 
