@@ -99,5 +99,40 @@
   console.log(categoryId)
 
   
+
+  const dataQuery = `
+  query Data($categoryId: uuid!) {
+    data(where: { category_id: { _eq: $categoryId } }) {
+      data_id
+      name
+      human_id
+      value
+      category {
+        category_id
+        name
+        human_id_prefix
+      }
+      archived
+    }
+  }
+  `;
+
+  let dataBody = JSON.stringify({
+    query: dataQuery,
+    variables: { categoryId }
+  })
+
+  const dataQueryResult = fetch(queryUrl, {
+    method: "POST",
+    headers: {
+      Authorization: bearer,
+      "Content-Type": "application/json"
+    },
+    body: dataBody
+  });
+
+  let dataId = await dataQueryResult.then((res) => res.json()).then((data) => data["data"]["data"]);
+
+  console.log(dataId)
 }
   
