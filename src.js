@@ -49,14 +49,16 @@
       }
       `;
   
-    let projectBody = JSON.stringify(projectQuery);
+    let projectBody = JSON.stringify({query: projectQuery});
+    const projectUrl = "https://staging.api.flowengineering.com/v1/graphql"
   
     var bearer = 'Bearer ' + idToken;
   
-    const projectQueryResult = fetch(url, {
+    const projectQueryResult = fetch(projectUrl, {
       method: "POST",
       headers: {
-        "Authorization": bearer,
+        Authorization: bearer,
+        "Content-Type": "application/json"
       },
       body: projectBody
     });
