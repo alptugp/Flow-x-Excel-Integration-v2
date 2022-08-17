@@ -62,8 +62,27 @@
       },
       body: projectBody
     });
-  
-    let projectId = await projectQueryResult.then((res) => res.json()).then((data) => data["data"]["project"][0]["project_id"]);
+
+    let projects = await projectQueryResult
+    .then((res) => res.json())
+    .then((data) => data["data"]["project"]);
+
+    function getMatchingProjectId(projectQueryRes, projectName) {
+      let project_id;
+      for (let project of projects) {
+        if (project["name"] == projectName) {
+          project_id = project["project_id"];
+        }
+      }
+      if (project_id == null) {
+        console.log("Please enter a project name which exists in Flow.");
+        return;
+      }
+      return project_id;
+    }  
+
+    let projectId = getMatchingProjectId(projects, projectName)
+
 
     console.log(projectId)
 
